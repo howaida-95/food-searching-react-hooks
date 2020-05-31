@@ -1,0 +1,262 @@
+  
+@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,600,600i,700&display=swap");
+$main-color: #40b48e;
+* {
+  font-family: "Source Sans Pro", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  list-style-type: none;
+  outline: none;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+/*------------------------------------ grid system ----------------------------*/
+/*--------------------------- variables --------------------------*/
+$grid-columns: 12;
+$grid-gutter-width: 30px;
+
+$grid-breakpoints: (
+  xs: 0, // Extra small screen / phone
+  sm: 576px, // Small screen / phone
+  md: 768px, // Medium screen / tablet
+  lg: 992px, // Large screen / desktop
+  xl: 1200px // Extra large screen / wide desktop
+);
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px
+);
+
+/* --------------------------- containers ------------------------*/ 
+.container-fluid{
+  width: 100%;
+  padding: 0 15px;
+  margin: 0 auto;
+}
+.container{
+  @extend .container-fluid;
+}
+$container-map:(576px: 540px, 768px: 720px, 992px: 960px, 1200px: 1140px);
+@each $break-point, $width in $container-map{
+  @media(min-width: #{$break-point}){
+    .container{
+      max-width: $width;
+    }
+  }
+}
+
+/* -------------------------- row --------------------------------- */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -15px;
+}
+/* --------------------------- columns ----------------------------*/
+
+%col-props{
+  position:relative;
+  width: 100%;
+  padding: 0 15px;
+}
+// Equal-width
+.col{
+  @extend %col-props;
+  flex-basis: 0;
+  flex-grow: 1;
+  max-width: 100%;
+}
+
+// Setting one column width at all breakpoints => col-1, col-2 ....col-12
+@mixin col-num($num){
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: 100%/(12/$num);
+  max-width: 100%/(12/$num);
+}
+
+@for $i from 1 through $grid-columns {
+  .col-#{$i}{
+    @extend %col-props;
+    @include col-num($i)
+  }
+}
+// setting responsive columns 
+@each $break-point, $width in $grid-breakpoints{
+  @for $i from 1 through $grid-columns {
+    .col-#{$break-point}-#{$i}{
+      @extend %col-props;
+    }
+    @media(min-width: #{$width}){
+      .col-#{$break-point}-#{$i}{
+        @include col-num($i)
+      }     
+    }
+  }
+}
+
+// col-auto & col-auto in different break points 
+@mixin col-auto{
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: auto;
+  width: auto;
+  max-width: none;
+}
+.col-auto{
+  @extend %col-props;
+  @include col-auto;
+}
+@each $break-point, $width in $grid-breakpoints{
+  .col-#{$break-point}-auto{
+    @extend %col-props;
+  }
+  @media(min-width: #{$width}){
+      .col-#{$break-point}-auto{
+        @include col-auto;
+    }
+  }
+}
+
+
+h1 {
+  text-align: center;
+  font-size: 3rem;
+  letter-spacing: 0.1rem;
+  font-style: italic;
+  color: $main-color;
+  text-shadow: 0 0.2rem 5rem rgb(119, 115, 115);
+  text-transform: uppercase;
+  margin: 4rem 0;
+}
+// media query 
+@media (min-width: 768px){// md & lg & xl screens 
+  h1{
+    font-size: 6rem;
+  }
+}
+
+.search-form {
+  width: 80%;
+  height: 10rem;
+  justify-content: center;
+  align-items: center;
+  background-color: #d3d3d3;
+  border-radius: 0.5rem;
+  margin: 0 auto 5rem;
+  box-shadow: 1rem 2rem 5rem #aaa;
+  position: relative;
+  input {
+    width: 100%;
+    font-size: 1.6rem;
+    border: none;
+    border-bottom: 0.1rem solid #ccc;
+    margin: 0 0.5rem;
+    border-radius: 0.5rem;
+    height: 3rem;
+    &[type="text"] {
+      padding: 0 0.5rem;
+      color: #555;
+    } 
+    &[type="submit"] {
+      text-transform: uppercase;
+      background-color: $main-color;
+      color: #fff;
+      cursor: pointer;
+    }   
+  }
+
+}
+
+.alert {
+  position: absolute;
+  top: -3rem;
+  left: 0;
+  background-color: rgb(233, 72, 72);
+  width: calc(100% - 0.4rem);
+  border-radius: 0.5rem;
+  padding: 0.2rem;
+  h3 {
+    font-size: 1.8rem;
+    color: #fff;
+    font-weight: 400;
+    text-transform: uppercase;
+    text-align: center;
+  }  
+}
+
+.recipes {
+  align-items: center;
+  justify-content: center;
+  align-items: flex-start;
+  .recipe {
+    width: 100%;
+    margin-bottom: 3rem;
+    display: flex;
+    flex-direction: column;
+    background-color: #d3d3d3;
+    padding: 2rem;
+    position: relative;
+    border-radius: 0.5rem;
+    box-shadow: 2rem 3rem 5rem #aaa;
+    h2 {
+      background-color: rgba(161, 161, 161, 0.7);
+      border-radius: 0.5rem;
+      padding: 0.3rem 0.5rem;
+      position: absolute;
+      top: 2.5rem;
+      left: 2.5rem;
+      right: 2.5rem;
+      font-size: 2.5rem;
+      font-weight: 400;
+      text-shadow: 0 0.5rem 0.5rem #555;
+      color: #fff;
+    }
+    img {
+      border-radius: 0.5rem;
+      object-fit: cover;
+    }
+    a {
+      font-size: 1.8rem;
+      color: $main-color;
+    }
+    button {
+      font-size: 2rem;
+      text-transform: uppercase;
+      color: #fff;
+      background-color: $main-color;
+      border: none;
+      border-radius: 0.5rem;
+      height: 3rem;
+      cursor: pointer;
+    }
+    
+  }  
+}
+
+.ingredient-list {
+  margin-top: 1rem;
+  background-color: #f0f0f0;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  li {
+    margin: 0.5rem 0;
+  }
+}
+
+.ingredient-text {
+  font-size: 1.5rem;
+  color: #888;
+}
+
+.ingredient-weight {
+  color: $main-color;
+  font-size: 1.3rem;
+}
